@@ -1,15 +1,16 @@
 package org.example;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        Map<String, String> properties = new HashMap();
+        Map<String, String> properties = new HashMap<>();
         properties.put("login", "Angelina");
         properties.put("password", "angelinaInHollywood123");
         properties.put("title", "Salt");
@@ -22,23 +23,13 @@ public class Main {
 
 //        Poniżej wariant dla danych z pliku properties oraz randomowych kluczy
 
-        Random random = new Random();
         Path path = Paths.get("src/main/resources/data.properties");
-        List<String> stringListDataFromFile = Files.readAllLines(path);
-        Map<String, String> mapDataFromFromFile = new HashMap<>();
-
-        stringListDataFromFile.forEach(element -> {
-            mapDataFromFromFile.put((element.substring(0, element.indexOf("=")).trim()), (element.substring(element.indexOf("=") + 1).trim()));
-        });
-
-        List<String> keysList = new ArrayList<>();
-        mapDataFromFromFile.forEach((key, value) -> {
-            keysList.add(key);
-        });
-
-        String[] testArray = {keysList.get(random.nextInt(keysList.size())), keysList.get(random.nextInt(keysList.size())), keysList.get(random.nextInt(keysList.size()))};
+        Map<String, String> mapDataFromFile = PrepareData.getDataFromFile(path);
+        List<String> keysFromMapList = PrepareData.getKeysFromMap(mapDataFromFile);
+        String[] threeRandomKeysArray = PrepareData.getThreeRandomKeysArray(keysFromMapList);
 
         System.out.println("++++++++++++++++++++");
-        Anonymization.anonymizationSensitiveData(mapDataFromFromFile, testArray);
+
+        Anonymization.anonymizationSensitiveData(mapDataFromFile, threeRandomKeysArray);
     }
 }
